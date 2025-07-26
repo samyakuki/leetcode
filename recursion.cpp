@@ -268,6 +268,72 @@ vector<string> letterCombinations(string digits) {
         return res;
 }
 
+
+vector<vector<string>> result;
+
+bool isPalindrome(const string& str, int left, int right) {
+        while (left < right) {
+            if (str[left++] != str[right--]) return false;
+        }
+        return true;
+}
+
+void backtrack(string& s, int start, vector<string>& path) {
+        if (start == s.size()) {
+            result.push_back(path);
+            return;
+        }
+
+        for (int end = start; end < s.size(); ++end) {
+            if (isPalindrome(s, start, end)) {
+                path.push_back(s.substr(start, end - start + 1)); 
+                backtrack(s, end + 1, path);                      
+                path.pop_back();                                
+            }
+        }
+}
+
+vector<vector<string>> partition(string s) {
+        vector<string> path;
+        backtrack(s, 0, path);
+        return result;
+}
+
+
+
+bool searchNext(vector<vector<char>>&board,string word,int row,int col,int idx,int m,int n){
+        if(idx==word.size()) return true;
+        if(row<0|| col<0|| row==m||col==n|| board[row][col]!=word[idx]or board[row][col]=='!'){
+            return false;
+        }
+        char c=board[row][col];
+        board[row][col]='!';
+        bool top= searchNext(board,word,row-1,col,idx+1,m,n);
+        bool right= searchNext(board,word,row,col-1,idx+1,m,n);
+        bool bottom= searchNext(board,word,row+1,col,idx+1,m,n);
+        bool left= searchNext(board,word,row,col+1,idx+1,m,n);
+        board[row][col]=c;
+        return top||right||bottom||left;
+}
+bool exist(vector<vector<char>>& board, string word) {
+        int rows = board.size();
+        int cols = board[0].size();
+        int idx=0;
+
+        for (int i = 0; i < rows; ++i) {
+            for (int j = 0; j < cols; ++j) {
+                if(board[i][j]==word[idx]){
+                    if(searchNext(board,word,i,j,idx,rows,cols)){
+                        return true;
+                    }
+                }
+              
+            }
+        }
+        return false;
+}
+
+
 int main() {
 
 
