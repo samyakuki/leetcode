@@ -334,6 +334,79 @@ bool exist(vector<vector<char>>& board, string word) {
 }
 
 
+void helpQueen(int col,vector<vector<string>>&ans,vector<string>&board,vector<int>&leftRow,vector<int>&lowerDiagonal,vector<int>&upperDiagonal,int n){
+        if(col==n){
+            ans.push_back(board);
+            return;
+        }
+        for(int row=0;row<n;row++){
+            if(leftRow[row]==0&&lowerDiagonal[row+col]==0&&upperDiagonal[n-1+col-row]==0){
+                board[row][col]='Q';
+                leftRow[row]=1;
+                lowerDiagonal[row+col]=1;
+                upperDiagonal[n-1+col-row]=1;
+                helpQueen(col+1,ans,board,leftRow,lowerDiagonal,upperDiagonal,n);
+                board[row][col]='.';
+                leftRow[row]=0;
+                lowerDiagonal[row+col]=0;
+                upperDiagonal[n-1+col-row]=0;
+            }
+         }
+}
+vector<vector<string>> solveNQueens(int n) {
+        vector<vector<string> >ans;
+        vector<string>board(n);
+        string s(n, '.');
+        for(int i=0;i<n;i++){
+            board[i]=s;
+        }
+        vector<int> leftRow(n, 0);
+        vector<int> lowerDiagonal(2 * n - 1, 0);
+        vector<int> upperDiagonal(2 * n - 1, 0);
+        helpQueen(0,ans,board,leftRow,lowerDiagonal,upperDiagonal,n);
+        return ans;
+
+
+        
+}
+
+void helpRat(int i, int j, vector < vector < int >> & a, int n, vector < string > & ans, string move,
+    vector < vector < int >> & vis, int di[], int dj[]) {
+    if (i == n - 1 && j == n - 1) {
+      ans.push_back(move);
+      return;
+    }
+    string dir = "DLRU";
+    for (int ind = 0; ind < 4; ind++) {
+      int nexti = i + di[ind];
+      int nextj = j + dj[ind];
+      if (nexti >= 0 && nextj >= 0 && nexti < n && nextj < n && !vis[nexti][nextj] && a[nexti][nextj] == 1) {
+        vis[i][j] = 1;
+        helpRat(nexti, nextj, a, n, ans, move + dir[ind], vis, di, dj);
+        vis[i][j] = 0;
+      }
+    }
+
+}
+
+vector < string > findPath(vector < vector < int >> & m, int n) {
+      vector < string > ans;
+      vector < vector < int >> vis(n, vector < int > (n, 0));
+      int di[] = {
+        +1,
+        0,
+        0,
+        -1
+      };
+      int dj[] = {
+        0,
+        -1,
+        1,
+        0
+      };
+      if (m[0][0] == 1) helpRat(0, 0, m, n, ans, "", vis, di, dj);
+      return ans;
+} 
 int main() {
 
 
