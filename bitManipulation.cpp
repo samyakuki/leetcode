@@ -112,6 +112,97 @@ int xorUpto(int n) {
 int xorRange(int L, int R) {
     return xorUpto(R) ^ xorUpto(L - 1);
 }
+pair<int,int> findTwoOdd(vector<int>&arr){
+    int xorAll=0;
+    for(int num:arr){
+        xorAll^=num;
+    }
+    int rightmostSetBit=xorAll&-xorAll;
+    int firstOdd=0,secondOdd=0; 
+    for(int num:arr){
+        if(num&rightmostSetBit) firstOdd^=num;
+        else secondOdd^=num;
+    }   
+    return {firstOdd,secondOdd};
+}
+
+void printPrimeFactors(int n) {
+    while ((n & 1) == 0) {
+        cout << 2 << " ";
+        n >>= 1; 
+    }
+
+    for (int i = 3; i * i <= n; i += 2) {
+        while (n % i == 0) {
+            cout << i << " ";
+            n /= i;
+        }
+    }
+
+    if (n > 2)
+        cout << n;
+}
+vector<int> getAllDivisors(int n) {
+    vector<int> divisors;
+
+    for (int i = 1; i <= sqrt(n); i++) {
+        if (n % i == 0) {
+            divisors.push_back(i);          
+            if (i != n / i)              
+                divisors.push_back(n / i); 
+        }
+    }
+
+    return divisors;
+}
+int countPrimes(int n) {
+        int count=0;
+        vector <bool>isPrime(n+1,true);
+        isPrime[0]=isPrime[1]=false;
+        for(int p=2;p*p<=n;p++){
+            if(isPrime[p]){
+                for(int i=p*p;i<n;i+=p){
+                    isPrime[i]=false;
+                }
+            }
+        }
+        for(int i=2;i<n;i++){
+            if(isPrime[i]){
+                count++;
+            }
+        }
+        return count;
+        
+}
+
+
+const int N = 1e6 + 1; 
+vector<int> spf(N);   
+void buildSieve() {
+    for (int i = 0; i < N; i++)
+        spf[i] = i; 
+    for (int p = 2; p * p < N; ++p) {
+        if (spf[p] == p) { 
+            for (int i = p * p; i < N; i += p) {
+                if (spf[i] == i)
+                    spf[i] = p; 
+            }
+        }
+    }
+}
+
+vector<int> getPrimeFactors(int n) {
+    vector<int> factors;
+    while (n != 1) {
+        factors.push_back(spf[n]);
+        n /= spf[n];
+    }
+    return factors;
+}
+
+
+
+
 int main(){
 
 
